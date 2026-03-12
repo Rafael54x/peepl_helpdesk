@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="helpdesk_sla_form_inherit" model="ir.ui.view">
+            <field name="name">helpdesk.sla.form.inherit</field>
+            <field name="model">helpdesk.sla</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='priority']" position="replace">
+                    <separator string="Priority Settings" colspan="4"/>
+                    <field name="auto_priority" widget="boolean_toggle" string="Enable Auto Priority" colspan="4"/>
+                    
+                    <field name="priority" string="Priority" widget="priority" invisible="auto_priority" colspan="4"/>
+                    
+                    <separator string="Auto Priority Configuration" colspan="4" invisible="not auto_priority"/>
+                    <div class="alert alert-info" invisible="not auto_priority" role="alert" colspan="4">
+                        <p class="mb-0"><strong>Priority is automatically set based on time remaining until ticket deadline:</strong></p>
+                        <ul class="mb-0 mt-2">
+                            <li><strong>Low:</strong> Time remaining &gt; Low Threshold ☆☆☆</li>
+                            <li><strong>Medium:</strong> Medium Threshold ≤ Time ≤ Low Threshold ★☆☆</li>
+                            <li><strong>High:</strong> High Threshold ≤ Time ≤ Medium Threshold ★★☆</li>
+                            <li><strong>Urgent:</strong> Time remaining ≤ Urgent Threshold ★★★</li>
+                        </ul>
+                    </div>
+                    
+                    <group invisible="not auto_priority" colspan="4">
+                        <group>
+                            <label for="priority_threshold_low" string="Low Priority Threshold"/>
+                            <div class="o_row">
+                                <field name="priority_threshold_low" class="oe_inline" widget="float_time"/>
+                                <span class="o_field_widget o_readonly_modifier">hours</span>
+                            </div>
+                            <label for="priority_threshold_medium" string="Medium Priority Threshold"/>
+                            <div class="o_row">
+                                <field name="priority_threshold_medium" class="oe_inline" widget="float_time"/>
+                                <span class="o_field_widget o_readonly_modifier">hours</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="priority_threshold_high" string="High Priority Threshold"/>
+                            <div class="o_row">
+                                <field name="priority_threshold_high" class="oe_inline" widget="float_time"/>
+                                <span class="o_field_widget o_readonly_modifier">hours</span>
+                            </div>
+                            <label for="priority_threshold_urgent" string="Urgent Priority Threshold"/>
+                            <div class="o_row">
+                                <field name="priority_threshold_urgent" class="oe_inline" widget="float_time"/>
+                                <span class="o_field_widget o_readonly_modifier">hours</span>
+                            </div>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='stage_id']" position="replace">
+                    <group colspan="4">
+                        <group>
+                            <field name="stage_id" string="Reach Stage" domain="[('team_ids', '=', team_id), ('id', 'not in', exclude_stage_ids)]" required="1" context="{'default_team_ids': team_id and [(6, 0, [team_id])]}"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

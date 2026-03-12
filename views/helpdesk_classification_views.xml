@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- CATEGORY VIEWS -->
+        <record id="helpdesk_category_view_list" model="ir.ui.view">
+            <field name="name">helpdesk.category.list</field>
+            <field name="model">helpdesk.category</field>
+            <field name="arch" type="xml">
+                <list string="Categories">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="helpdesk_category_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.category.form</field>
+            <field name="model">helpdesk.category</field>
+            <field name="arch" type="xml">
+                <form string="Category">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="description" nolabel="1" placeholder="Description..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- SUB CATEGORY VIEWS -->
+        <record id="helpdesk_subcategory_view_list" model="ir.ui.view">
+            <field name="name">helpdesk.subcategory.list</field>
+            <field name="model">helpdesk.subcategory</field>
+            <field name="arch" type="xml">
+                <list string="Sub Categories">
+                    <field name="sequence" widget="handle"/>
+                    <field name="category_id"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="helpdesk_subcategory_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.subcategory.form</field>
+            <field name="model">helpdesk.subcategory</field>
+            <field name="arch" type="xml">
+                <form string="Sub Category">
+                    <sheet>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="description" nolabel="1" placeholder="Description..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ITEM VIEWS -->
+        <record id="helpdesk_item_view_list" model="ir.ui.view">
+            <field name="name">helpdesk.item.list</field>
+            <field name="model">helpdesk.item</field>
+            <field name="arch" type="xml">
+                <list string="Items">
+                    <field name="sequence" widget="handle"/>
+                    <field name="category_id"/>
+                    <field name="subcategory_id"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="helpdesk_item_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.item.form</field>
+            <field name="model">helpdesk.item</field>
+            <field name="arch" type="xml">
+                <form string="Item">
+                    <sheet>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="description" nolabel="1" placeholder="Description..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

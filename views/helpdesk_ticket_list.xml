@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="helpdesk_ticket_list_inherit" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.list.inherit</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='stage_id']" position="after">
+                    <field name="deadline" optional="show" widget="remaining_days"/>
+                    <field name="category_id" optional="hide"/>
+                    <field name="subcategory_id" optional="hide"/>
+                    <field name="item_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- MENU -->
+        <menuitem
+            id="helpdesk_menu_classification"
+            name="Classification"
+            parent="helpdesk.helpdesk_menu_config"
+            sequence="25"
+            groups="helpdesk.group_helpdesk_manager">
+
+            <menuitem
+                id="helpdesk_menu_categories"
+                name="Categories"
+                action="helpdesk_category_action"
+                sequence="1"
+                groups="helpdesk.group_helpdesk_manager"/>
+
+            <menuitem
+                id="helpdesk_menu_sub_categories"
+                name="Sub Categories"
+                action="helpdesk_subcategory_action"
+                sequence="2"
+                groups="helpdesk.group_helpdesk_manager"/>
+
+            <menuitem
+                id="helpdesk_menu_items"
+                name="Items"
+                action="helpdesk_item_action"
+                sequence="3"
+                groups="helpdesk.group_helpdesk_manager"/>
+
+        </menuitem>
+    </data>
+</odoo>
