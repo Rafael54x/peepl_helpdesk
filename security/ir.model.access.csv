@@ -3,5 +3,7 @@ access_helpdesk_category_manager,helpdesk.category manager,model_helpdesk_catego
 access_helpdesk_category_user,helpdesk.category user,model_helpdesk_category,helpdesk.group_helpdesk_user,1,0,0,0
 access_helpdesk_subcategory_manager,helpdesk.subcategory manager,model_helpdesk_subcategory,helpdesk.group_helpdesk_manager,1,1,1,1
 access_helpdesk_subcategory_user,helpdesk.subcategory user,model_helpdesk_subcategory,helpdesk.group_helpdesk_user,1,0,0,0
+access_helpdesk_item_category_manager,helpdesk.item.category manager,model_helpdesk_item_category,helpdesk.group_helpdesk_manager,1,1,1,1
+access_helpdesk_item_category_user,helpdesk.item.category user,model_helpdesk_item_category,helpdesk.group_helpdesk_user,1,0,0,0
 access_helpdesk_item_manager,helpdesk.item manager,model_helpdesk_item,helpdesk.group_helpdesk_manager,1,1,1,1
 access_helpdesk_item_user,helpdesk.item user,model_helpdesk_item,helpdesk.group_helpdesk_user,1,0,0,0

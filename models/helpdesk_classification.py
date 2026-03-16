@@ -29,12 +29,12 @@ class HelpdeskSubCategory(models.Model):
     description = fields.Text()
 
 
-class HelpdeskItem(models.Model):
-    _name = "helpdesk.item"
-    _description = "Helpdesk Item"
+class HelpdeskItemCategory(models.Model):
+    _name = "helpdesk.item.category"
+    _description = "Helpdesk Item Category"
     _order = "sequence, name"
 
-    name = fields.Char(string="Item Name", required=True)
+    name = fields.Char(string="Item Category Name", required=True)
     subcategory_id = fields.Many2one(
         "helpdesk.subcategory",
         string="Sub Category",
@@ -45,6 +45,37 @@ class HelpdeskItem(models.Model):
         "helpdesk.category",
         string="Category",
         related="subcategory_id.category_id",
+        store=True,
+        readonly=True
+    )
+    sequence = fields.Integer(default=10)
+    active = fields.Boolean(default=True)
+    description = fields.Text()
+
+
+class HelpdeskItem(models.Model):
+    _name = "helpdesk.item"
+    _description = "Helpdesk Item"
+    _order = "sequence, name"
+
+    name = fields.Char(string="Item Name", required=True)
+    item_category_id = fields.Many2one(
+        "helpdesk.item.category",
+        string="Item Category",
+        required=True,
+        ondelete="cascade"
+    )
+    subcategory_id = fields.Many2one(
+        "helpdesk.subcategory",
+        string="Sub Category",
+        related="item_category_id.subcategory_id",
+        store=True,
+        readonly=True
+    )
+    category_id = fields.Many2one(
+        "helpdesk.category",
+        string="Category",
+        related="item_category_id.category_id",
         store=True,
         readonly=True
     )

@@ -22,13 +22,21 @@
                 action="helpdesk_subcategory_action"
                 sequence="2"
                 groups="helpdesk.group_helpdesk_manager"/>
+            
+            <menuitem
+                id="helpdesk_menu_item_categories"
+                name="Item Categories"
+                action="helpdesk_item_category_action"
+                sequence="3"
+                groups="helpdesk.group_helpdesk_manager"/>
 
             <menuitem
                 id="helpdesk_menu_items"
                 name="Items"
                 action="helpdesk_item_action"
-                sequence="3"
+                sequence="4"
                 groups="helpdesk.group_helpdesk_manager"/>
+
 
         </menuitem>
     </data>

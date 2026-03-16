@@ -18,11 +18,44 @@ class HelpdeskTicket(models.Model):
         string="Sub Category",
         domain="[('category_id', '=', category_id)]"
     )
+    item_category_id = fields.Many2one(
+        "helpdesk.item.category",
+        string="Item Category",
+        domain="[('subcategory_id', '=', subcategory_id)]"
+    )
     item_id = fields.Many2one(
         "helpdesk.item",
         string="Item",
-        domain="[('subcategory_id', '=', subcategory_id)]"
+        domain="[('item_category_id', '=', item_category_id)]"
     )
+    has_auto_priority = fields.Boolean(
+        compute="_compute_has_auto_priority",
+        store=False
+    )
+
+    @api.depends('team_id')
+    def _compute_has_auto_priority(self):
+        for rec in self:
+            rec.has_auto_priority = bool(self.env['helpdesk.sla'].search([
+                ('team_id', '=', rec.team_id.id),
+                ('auto_priority', '=', True),
+                ('active', '=', True)
+            ], limit=1))
+
+    @api.onchange('category_id')
+    def _onchange_category_id(self):
+        self.subcategory_id = False
+        self.item_category_id = False
+        self.item_id = False
+
+    @api.onchange('subcategory_id')
+    def _onchange_subcategory_id(self):
+        self.item_category_id = False
+        self.item_id = False
+
+    @api.onchange('item_category_id')
+    def _onchange_item_category_id(self):
+        self.item_id = False
 
     @api.onchange('deadline', 'team_id')
     def _onchange_deadline_update_priority(self):

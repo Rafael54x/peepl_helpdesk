@@ -6,13 +6,27 @@
             <field name="model">helpdesk.ticket</field>
             <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='priority']" position="attributes">
+                    <attribute name="readonly">has_auto_priority</attribute>
+                </xpath>
                 <xpath expr="//field[@name='email_cc']" position="after">
                     <field name="deadline"/>
+                    <field name="has_auto_priority" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='team_id']" position="before">
-                    <field name="category_id"/>
-                    <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
-                    <field name="item_id" domain="[('subcategory_id', '=', subcategory_id)]"/>
+                    <field name="category_id" required="1"/>
+                    <field name="subcategory_id"
+                        domain="[('category_id', '=', category_id)]"
+                        readonly="not category_id"
+                        required="1"/>
+                    <field name="item_category_id"
+                        domain="[('subcategory_id', '=', subcategory_id)]"
+                        readonly="not subcategory_id"
+                        required="1"/>
+                    <field name="item_id"
+                        domain="[('item_category_id', '=', item_category_id)]"
+                        readonly="not item_category_id"
+                        required="1"/>
                 </xpath>
             </field>
         </record>

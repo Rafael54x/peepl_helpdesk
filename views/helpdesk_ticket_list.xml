@@ -6,8 +6,12 @@
             <field name="model">helpdesk.ticket</field>
             <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='priority']" position="attributes">
+                    <attribute name="readonly">has_auto_priority</attribute>
+                </xpath>
                 <xpath expr="//field[@name='stage_id']" position="after">
-                    <field name="deadline" optional="show" widget="remaining_days"/>
+                    <field name="has_auto_priority" invisible="1" optional="hide"/>
+                    <field name="deadline" optional="show"/>
                     <field name="category_id" optional="hide"/>
                     <field name="subcategory_id" optional="hide"/>
                     <field name="item_id" optional="hide"/>

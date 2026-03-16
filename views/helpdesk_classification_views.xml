@@ -63,6 +63,39 @@
             </field>
         </record>
 
+        <!-- ITEM CATEGORY VIEWS -->
+        <record id="helpdesk_item_category_view_list" model="ir.ui.view">
+            <field name="name">helpdesk.item.category.list</field>
+            <field name="model">helpdesk.item.category</field>
+            <field name="arch" type="xml">
+                <list string="Item Categories">
+                    <field name="sequence" widget="handle"/>
+                    <field name="category_id"/>
+                    <field name="subcategory_id"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="helpdesk_item_category_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.item.category.form</field>
+            <field name="model">helpdesk.item.category</field>
+            <field name="arch" type="xml">
+                <form string="Item Category">
+                    <sheet>
+                        <group>
+                            <field name="subcategory_id"/>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="description" nolabel="1" placeholder="Description..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <!-- ITEM VIEWS -->
         <record id="helpdesk_item_view_list" model="ir.ui.view">
             <field name="name">helpdesk.item.list</field>
@@ -72,6 +105,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="category_id"/>
                     <field name="subcategory_id"/>
+                    <field name="item_category_id"/>
                     <field name="name"/>
                 </list>
             </field>
@@ -84,8 +118,7 @@
                 <form string="Item">
                     <sheet>
                         <group>
-                            <field name="category_id"/>
-                            <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
+                            <field name="item_category_id"/>
                             <field name="name"/>
                             <field name="sequence"/>
                         </group>
