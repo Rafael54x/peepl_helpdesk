@@ -9,6 +9,9 @@
                 <xpath expr="//field[@name='priority']" position="attributes">
                     <attribute name="readonly">has_auto_priority</attribute>
                 </xpath>
+                <xpath expr="//field[@name='ticket_ref']" position="after">
+                    <field name="opened_by_id" string="Opened By" readonly="1" optional="show"/>
+                </xpath>
                 <xpath expr="//field[@name='stage_id']" position="after">
                     <field name="has_auto_priority" invisible="1" optional="hide"/>
                     <field name="deadline" optional="show"/>

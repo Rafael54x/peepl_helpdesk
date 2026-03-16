@@ -32,6 +32,18 @@ class HelpdeskTicket(models.Model):
         compute="_compute_has_auto_priority",
         store=False
     )
+    opened_by_id = fields.Many2one(
+        "res.users",
+        string="Opened By",
+        compute="_compute_opened_by",
+        store=True,
+        readonly=True
+    )
+
+    @api.depends('create_uid')
+    def _compute_opened_by(self):
+        for rec in self:
+            rec.opened_by_id = rec.create_uid
 
     @api.depends('team_id')
     def _compute_has_auto_priority(self):

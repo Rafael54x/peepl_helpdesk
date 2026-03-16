@@ -12,6 +12,7 @@
                 <xpath expr="//field[@name='email_cc']" position="after">
                     <field name="deadline"/>
                     <field name="has_auto_priority" invisible="1"/>
+                    <field name="opened_by_id" string="Opened By" readonly="1"/>
                 </xpath>
                 <xpath expr="//field[@name='team_id']" position="before">
                     <field name="category_id" required="1"/>
