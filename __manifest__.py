@@ -13,6 +13,7 @@
         "views/helpdesk_sla_form.xml",
         "views/helpdesk_ticket_list.xml",
         "views/helpdesk_ticket_form.xml",
+        "views/helpdesk_ticket_menu.xml",
     ],
 
     "license": "LGPL-3",

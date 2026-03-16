@@ -5,6 +5,7 @@ from datetime import datetime
 class HelpdeskTicket(models.Model):
     _inherit = "helpdesk.ticket"
 
+    is_draft = fields.Boolean(string="Is Draft", default=False, copy=False)
     deadline = fields.Datetime(
         string="Deadline",
         help="Deadline for resolving this ticket"
@@ -69,33 +70,61 @@ class HelpdeskTicket(models.Model):
     def _onchange_item_category_id(self):
         self.item_id = False
 
-    @api.onchange('deadline', 'team_id')
-    def _onchange_deadline_update_priority(self):
-        """Auto-update priority when deadline changes based on SLA auto_priority setting"""
-        if not self.deadline or not self.team_id:
-            return
+    def _compute_priority_from_deadline(self):
+        for rec in self:
+            if not rec.deadline or not rec.team_id:
+                continue
+            sla = self.env['helpdesk.sla'].search([
+                ('team_id', '=', rec.team_id.id),
+                ('auto_priority', '=', True),
+                ('active', '=', True)
+            ], limit=1)
+            if not sla:
+                continue
+            time_remaining = (rec.deadline - datetime.now()).total_seconds() / 3600
+            if time_remaining <= sla.priority_threshold_urgent:
+                rec.priority = '3'
+            elif time_remaining <= sla.priority_threshold_high:
+                rec.priority = '2'
+            elif time_remaining <= sla.priority_threshold_medium:
+                rec.priority = '1'
+            else:
+                rec.priority = '0'
 
-        # Get SLA policies for this team with auto_priority enabled
-        sla_policies = self.env['helpdesk.sla'].search([
-            ('team_id', '=', self.team_id.id),
-            ('auto_priority', '=', True),
-            ('active', '=', True)
-        ])
+    @api.model_create_multi
+    def create(self, vals_list):
+        draft_indices = [i for i, v in enumerate(vals_list) if v.get('is_draft')]
+        for i in draft_indices:
+            vals_list[i]['stage_id'] = False
+        tickets = super().create(vals_list)
+        draft_tickets = tickets.filtered('is_draft')
+        if draft_tickets:
+            seq = self.env['ir.sequence'].sudo().search([('code', '=', 'helpdesk.ticket')], limit=1)
+            if seq:
+                seq.number_next_actual -= len(draft_tickets)
+            draft_tickets.sudo().write({'ticket_ref': False})
+        tickets._compute_priority_from_deadline()
+        return tickets
 
-        if not sla_policies:
-            return
+    def write(self, vals):
+        res = super().write(vals)
+        if 'deadline' in vals or 'team_id' in vals:
+            self._compute_priority_from_deadline()
+        return res
 
-        # Use first matching SLA policy
-        sla = sla_policies[0]
-        now = datetime.now()
-        time_remaining = (self.deadline - now).total_seconds() / 3600
+    def action_save_as_draft(self):
+        self.ensure_one()
+        self.write({'is_draft': True, 'ticket_ref': False, 'stage_id': False})
 
-        # Priority mapping: '0'=Low, '1'=Medium, '2'=High, '3'=Urgent
-        if time_remaining <= sla.priority_threshold_urgent:
-            self.priority = '3'  # Urgent
-        elif time_remaining <= sla.priority_threshold_high:
-            self.priority = '2'  # High
-        elif time_remaining <= sla.priority_threshold_medium:
-            self.priority = '1'  # Medium
-        elif time_remaining > sla.priority_threshold_low:
-            self.priority = '0'  # Low
+    def action_submit(self):
+        self.ensure_one()
+        team = self.team_id
+        stage = team._determine_stage()[team.id] if team else self.env['helpdesk.stage'].search([], limit=1)
+        company = team.company_id if team else self.env.company
+        ticket_ref = self.env['ir.sequence'].with_company(company).sudo().next_by_code('helpdesk.ticket')
+        self.write({
+            'is_draft': False,
+            'ticket_ref': ticket_ref,
+            'stage_id': stage.id,
+        })
+
